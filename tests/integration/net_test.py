@@ -4,7 +4,6 @@ import pytest
 
 import eospyo
 
-
 aliases = [
     eospyo.EosMainnet,
     eospyo.KylinTestnet,
