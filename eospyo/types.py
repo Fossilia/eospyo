@@ -617,7 +617,7 @@ class Wasm(EosioType):
         if isinstance(file, Path):
             fullpath = file
         else:
-            fullpath = Path(str(Path().resolve()) + "/" + file)
+            fullpath = Path().resolve() / Path(file)
 
         if fullpath.suffix == ".zip":
             with zipfile.ZipFile(fullpath) as zp:

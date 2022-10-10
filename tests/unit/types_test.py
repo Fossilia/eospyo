@@ -1,6 +1,7 @@
 """type tests."""
 
 import datetime as dt
+import os
 
 import pydantic
 import pytest
@@ -350,3 +351,16 @@ def test_wasm_from_file_equal_to_wasm_from_bytes():
     from_bytes = types.Wasm(value=types.load_bin_from_path(file_path))
     from_file = types.Wasm.from_file(file_path)
     assert from_bytes == from_file
+
+
+def test_wasm_from_file_with_string_and_fullpath_returns_wasm_object():
+    path = str(valid_contract.path_zip.absolute())
+    wasm_obj = types.Wasm.from_file(file=path)
+    assert isinstance(wasm_obj, types.Wasm)
+
+
+def test_wasm_from_file_with_string_and_relative_path_returns_wasm_object():
+    local_path = os.getcwd()
+    path = str(valid_contract.path_zip.relative_to(local_path))
+    wasm_obj = types.Wasm.from_file(file=path)
+    assert isinstance(wasm_obj, types.Wasm)
