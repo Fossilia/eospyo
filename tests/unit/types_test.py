@@ -7,6 +7,8 @@ import pytest
 
 from eospyo import types
 
+from . import sample_wasm
+
 values = [
     (types.Bool, True, b"\x01"),
     (types.Bool, False, b"\x00"),
@@ -317,3 +319,27 @@ def test_array_can_be_sliced_2():
     arr_full = types.Array(values=range(10), type_=types.Int8)
     arr_slice = types.Array(values=range(10)[8:3:-2], type_=types.Int8)
     assert arr_full[8:3:-2] == arr_slice
+
+
+def test_wasm_from_zip_file_return_wasm_type():
+    path = "tests/unit/test_contract/test_contract.zip"
+    wasm_obj = types.Wasm.from_file(filename=path)
+    assert isinstance(wasm_obj, types.Wasm)
+
+
+def test_wasm_from_wasm_file_return_wasm_type():
+    path = "tests/unit/test_contract/test_contract.wasm"
+    wasm_obj = types.Wasm.from_file(filename=path)
+    assert isinstance(wasm_obj, types.Wasm)
+
+
+def test_wasm_from_zip_file_value_matches_expected_bytes():
+    path = "tests/unit/test_contract/test_contract.zip"
+    wasm_obj = types.Wasm.from_file(filename=path)
+    assert wasm_obj.value == sample_wasm.bytes_
+
+
+def test_wasm_from_wasm_file_value_matches_expected_bytes():
+    path = "tests/unit/test_contract/test_contract.wasm"
+    wasm_obj = types.Wasm.from_file(filename=path)
+    assert wasm_obj.value == sample_wasm.bytes_

@@ -611,6 +611,23 @@ def from_string(type_: str) -> EosioType:
 class Wasm(EosioType):
     value: bytes
 
+    @classmethod
+    def from_file(cls, filename: Path, *, extension: str = ".wasm"):
+        """Create a wasm object from a .wasm or from a zipped file."""
+        fullpath = Path(str(Path().resolve()) + "/" + filename)
+
+        if fullpath.suffix == ".zip":
+            with zipfile.ZipFile(fullpath) as zp:
+                zip_path = str(fullpath.stem) + extension
+                with zp.open(zip_path, mode="r") as f:
+                    file_contents = f.read()
+
+        else:
+            with open(fullpath, "rb") as f:
+                file_contents = f.read()
+
+        return cls(value=file_contents)
+
     def __bytes__(self):
         hexcode = bin_to_hex(self.value)
         uint8_array = hex_to_uint8_array(hexcode)
