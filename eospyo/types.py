@@ -614,7 +614,10 @@ class Wasm(EosioType):
     @classmethod
     def from_file(cls, file: Path, *, extension: str = ".wasm"):
         """Create a wasm object from a .wasm or from a zipped file."""
-        fullpath = Path(str(Path().resolve()) + "/" + file)
+        if isinstance(file, Path):
+            fullpath = file
+        else:
+            fullpath = Path(str(Path().resolve()) + "/" + file)
 
         if fullpath.suffix == ".zip":
             with zipfile.ZipFile(fullpath) as zp:
@@ -679,7 +682,7 @@ def _hex_to_bin(hexcode: str) -> bytes:
 
 
 def load_bin_from_path(path: str, zip_extension=".wasm"):
-    filename = Path(str(Path().resolve()) + "/" + path)
+    filename = Path().resolve() / Path(path)
 
     if filename.suffix == ".zip":
         with zipfile.ZipFile(filename) as thezip:

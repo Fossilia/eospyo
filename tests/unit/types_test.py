@@ -7,7 +7,7 @@ import pytest
 
 from eospyo import types
 
-from . import sample_wasm
+from .contracts.valid import hello as valid_contract
 
 values = [
     (types.Bool, True, b"\x01"),
@@ -97,9 +97,9 @@ values = [
     ),
     (
         types.Wasm,
-        types.load_bin_from_path("tests/unit/test_contract/test_contract.zip"),
+        types.load_bin_from_path("tests/unit/contracts/valid/hello.wasm"),
         types.load_bin_from_path(
-            "tests/unit/test_contract/bin_files/wasm_pass_bytes.zip",
+            "tests/unit/contracts/bin_files/wasm_pass_bytes.zip",
             ".bin",
         ),
     ),
@@ -322,24 +322,31 @@ def test_array_can_be_sliced_2():
 
 
 def test_wasm_from_zip_file_return_wasm_type():
-    path = "tests/unit/test_contract/test_contract.zip"
+    path = valid_contract.path_zip
     wasm_obj = types.Wasm.from_file(file=path)
     assert isinstance(wasm_obj, types.Wasm)
 
 
 def test_wasm_from_wasm_file_return_wasm_type():
-    path = "tests/unit/test_contract/test_contract.wasm"
+    path = valid_contract.path_wasm
     wasm_obj = types.Wasm.from_file(file=path)
     assert isinstance(wasm_obj, types.Wasm)
 
 
 def test_wasm_from_zip_file_value_matches_expected_bytes():
-    path = "tests/unit/test_contract/test_contract.zip"
+    path = valid_contract.path_zip
     wasm_obj = types.Wasm.from_file(file=path)
-    assert wasm_obj.value == sample_wasm.bytes_
+    assert wasm_obj.value == valid_contract.bytes_
 
 
 def test_wasm_from_wasm_file_value_matches_expected_bytes():
-    path = "tests/unit/test_contract/test_contract.wasm"
+    path = valid_contract.path_wasm
     wasm_obj = types.Wasm.from_file(file=path)
-    assert wasm_obj.value == sample_wasm.bytes_
+    assert wasm_obj.value == valid_contract.bytes_
+
+
+def test_wasm_from_file_equal_to_wasm_from_bytes():
+    file_path = valid_contract.path_zip
+    from_bytes = types.Wasm(value=types.load_bin_from_path(file_path))
+    from_file = types.Wasm.from_file(file_path)
+    assert from_bytes == from_file

@@ -6,6 +6,8 @@ import pytest
 
 import eospyo
 
+from .contracts.valid import hello as valid_contract
+
 
 def test_create_authorization_using_dict():
     auth = eospyo.Authorization.parse_obj(
@@ -121,9 +123,8 @@ def test_backend_transfer_transaction_serialization(net):
 
 
 def test_backend_set_wasm_code_transaction_serialization(net):
-    wasm_file = eospyo.types.load_bin_from_path(
-        "tests/unit/test_contract/test_contract.zip"
-    )
+    wasm_file_path = str(valid_contract.path_zip)
+    wasm_file = eospyo.types.load_bin_from_path(wasm_file_path)
 
     data = [
         eospyo.Data(name="account", value=eospyo.types.Name("user2")),
