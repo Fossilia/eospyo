@@ -675,17 +675,3 @@ def _uint8_list_to_hex(uint8_list: list) -> str:
 
 def _hex_to_bin(hexcode: str) -> bytes:
     return binascii.unhexlify(hexcode.encode("utf-8"))
-
-
-def load_bin_from_path(path: str, zip_extension=".wasm"):
-    filename = Path().resolve() / Path(path)
-
-    if filename.suffix == ".zip":
-        with zipfile.ZipFile(filename) as thezip:
-            with thezip.open(
-                str(filename.stem) + zip_extension, mode="r"
-            ) as f:
-                return f.read()
-    else:
-        with open(filename, "rb") as f:
-            return f.read()

@@ -123,9 +123,7 @@ def test_backend_transfer_transaction_serialization(net):
 
 
 def test_backend_set_wasm_code_transaction_serialization(net):
-    wasm_file_path = str(valid_contract.path_zip)
-    wasm_file = eospyo.types.load_bin_from_path(wasm_file_path)
-    wasm_obj = eospyo.types.Wasm(wasm_file)
+    wasm_obj = eospyo.types.Wasm.from_file(valid_contract.path_zip)
 
     data = [
         eospyo.Data(name="account", value=eospyo.types.Name("user2")),

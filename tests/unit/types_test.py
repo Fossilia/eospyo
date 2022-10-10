@@ -2,6 +2,8 @@
 
 import datetime as dt
 import os
+import zipfile
+from pathlib import Path
 
 import pydantic
 import pytest
@@ -9,6 +11,21 @@ import pytest
 from eospyo import types
 
 from .contracts.valid import hello as valid_contract
+
+
+def load_bin_from_path(path: str, zip_extension=".wasm"):
+    filename = Path().resolve() / Path(path)
+
+    if filename.suffix == ".zip":
+        with zipfile.ZipFile(filename) as thezip:
+            with thezip.open(
+                str(filename.stem) + zip_extension, mode="r"
+            ) as f:
+                return f.read()
+    else:
+        with open(filename, "rb") as f:
+            return f.read()
+
 
 values = [
     (types.Bool, True, b"\x01"),
@@ -98,8 +115,8 @@ values = [
     ),
     (
         types.Wasm,
-        types.load_bin_from_path("tests/unit/contracts/valid/hello.wasm"),
-        types.load_bin_from_path(
+        load_bin_from_path("tests/unit/contracts/valid/hello.wasm"),
+        load_bin_from_path(
             "tests/unit/contracts/bin_files/wasm_pass_bytes.zip",
             ".bin",
         ),
@@ -348,7 +365,7 @@ def test_wasm_from_wasm_file_value_matches_expected_bytes():
 
 def test_wasm_from_file_equal_to_wasm_from_bytes():
     file_path = valid_contract.path_zip
-    from_bytes = types.Wasm(value=types.load_bin_from_path(file_path))
+    from_bytes = types.Wasm(value=load_bin_from_path(file_path))
     from_file = types.Wasm.from_file(file_path)
     assert from_bytes == from_file
 
