@@ -3,7 +3,6 @@
 import binascii
 import calendar
 import datetime as dt
-import json
 import re
 import struct
 import sys
@@ -693,9 +692,3 @@ def load_bin_from_path(path: str, zip_extension=".wasm"):
     else:
         with open(filename, "rb") as f:
             return f.read()
-
-
-def load_dict_from_path(path: str):
-    filename = str(Path().resolve()) + "/" + path
-    with open(filename, "r") as f:
-        return json.load(f)
