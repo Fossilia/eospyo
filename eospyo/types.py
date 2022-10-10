@@ -630,9 +630,11 @@ class Wasm(EosioType):
 
         return cls(value=file_contents)
 
+    def to_hex(self):
+        return str(binascii.hexlify(self.value).decode("utf-8"))
+
     def __bytes__(self):
-        hexcode = bin_to_hex(self.value)
-        uint8_array = _hex_to_uint8_array(hexcode)
+        uint8_array = _hex_to_uint8_array(self.to_hex())
         return bytes(uint8_array)
 
     @classmethod
@@ -669,10 +671,6 @@ def _uint8_list_to_hex(uint8_list: list) -> str:
     for int8 in uint8_list:
         hexcode += ("00" + str(format(int8.value, "x")))[-2:]
     return hexcode
-
-
-def bin_to_hex(bin: bytes) -> str:
-    return str(binascii.hexlify(bin).decode("utf-8"))
 
 
 def _hex_to_bin(hexcode: str) -> bytes:

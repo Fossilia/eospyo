@@ -125,21 +125,17 @@ def test_backend_transfer_transaction_serialization(net):
 def test_backend_set_wasm_code_transaction_serialization(net):
     wasm_file_path = str(valid_contract.path_zip)
     wasm_file = eospyo.types.load_bin_from_path(wasm_file_path)
+    wasm_obj = eospyo.types.Wasm(wasm_file)
 
     data = [
         eospyo.Data(name="account", value=eospyo.types.Name("user2")),
         eospyo.Data(name="vmtype", value=eospyo.types.Uint8(0)),
         eospyo.Data(name="vmversion", value=eospyo.types.Uint8(0)),
-        eospyo.Data(
-            name="code",
-            value=eospyo.types.Wasm(wasm_file),
-        ),
+        eospyo.Data(name="code", value=wasm_obj),
     ]
     backend_data_bytes = b""
     for d in data:
         backend_data_bytes += bytes(d)
-
-    wasm_hexcode = eospyo.types.bin_to_hex(wasm_file)
 
     server_resp = net.abi_json_to_bin(
         account_name="eosio",
@@ -148,7 +144,7 @@ def test_backend_set_wasm_code_transaction_serialization(net):
             "account": "user2",
             "vmtype": 0,
             "vmversion": 0,
-            "code": wasm_hexcode,
+            "code": wasm_obj.to_hex(),
         },
     )
 
