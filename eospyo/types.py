@@ -578,35 +578,6 @@ class Varuint32(EosioType):
         return cls(value=value)
 
 
-def _get_all_types():
-    def is_eostype(class_):
-        if isinstance(class_, type):
-            if issubclass(class_, EosioType) and class_ is not EosioType:
-                return True
-        return False
-
-    classes = list(sys.modules[__name__].__dict__.items())
-
-    all_types = {
-        name.lower(): class_ for name, class_ in classes if is_eostype(class_)
-    }
-    return all_types
-
-
-_all_types = _get_all_types()
-
-
-def from_string(type_: str) -> EosioType:
-    type_ = type_.lower()
-    try:
-        class_ = _all_types[type_]
-    except KeyError:
-        types = list(_all_types.keys())
-        msg = f"Type {type_} not found. List of available {types=}"
-        raise ValueError(msg)
-    return class_
-
-
 class Wasm(EosioType):
     value: bytes
 
@@ -675,3 +646,33 @@ def _uint8_list_to_hex(uint8_list: list) -> str:
 
 def _hex_to_bin(hexcode: str) -> bytes:
     return binascii.unhexlify(hexcode.encode("utf-8"))
+
+
+def _get_all_types():
+    def is_eostype(class_):
+        if isinstance(class_, type):
+            if issubclass(class_, EosioType) and class_ is not EosioType:
+                return True
+        return False
+
+    classes = list(sys.modules[__name__].__dict__.items())
+
+    all_types = {
+        name.lower(): class_ for name, class_ in classes if is_eostype(class_)
+    }
+    return all_types
+
+
+_all_types = _get_all_types()
+
+
+def from_string(type_: str) -> EosioType:
+    """Return an EosioType object from a given string."""
+    type_ = type_.lower()
+    try:
+        class_ = _all_types[type_]
+    except KeyError:
+        types = list(_all_types.keys())
+        msg = f"Type {type_} not found. List of available {types=}"
+        raise ValueError(msg)
+    return class_
