@@ -323,23 +323,23 @@ def test_array_can_be_sliced_2():
 
 def test_wasm_from_zip_file_return_wasm_type():
     path = "tests/unit/test_contract/test_contract.zip"
-    wasm_obj = types.Wasm.from_file(filename=path)
+    wasm_obj = types.Wasm.from_file(file=path)
     assert isinstance(wasm_obj, types.Wasm)
 
 
 def test_wasm_from_wasm_file_return_wasm_type():
     path = "tests/unit/test_contract/test_contract.wasm"
-    wasm_obj = types.Wasm.from_file(filename=path)
+    wasm_obj = types.Wasm.from_file(file=path)
     assert isinstance(wasm_obj, types.Wasm)
 
 
 def test_wasm_from_zip_file_value_matches_expected_bytes():
     path = "tests/unit/test_contract/test_contract.zip"
-    wasm_obj = types.Wasm.from_file(filename=path)
+    wasm_obj = types.Wasm.from_file(file=path)
     assert wasm_obj.value == sample_wasm.bytes_
 
 
 def test_wasm_from_wasm_file_value_matches_expected_bytes():
     path = "tests/unit/test_contract/test_contract.wasm"
-    wasm_obj = types.Wasm.from_file(filename=path)
+    wasm_obj = types.Wasm.from_file(file=path)
     assert wasm_obj.value == sample_wasm.bytes_

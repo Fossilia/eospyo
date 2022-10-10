@@ -612,9 +612,9 @@ class Wasm(EosioType):
     value: bytes
 
     @classmethod
-    def from_file(cls, filename: Path, *, extension: str = ".wasm"):
+    def from_file(cls, file: Path, *, extension: str = ".wasm"):
         """Create a wasm object from a .wasm or from a zipped file."""
-        fullpath = Path(str(Path().resolve()) + "/" + filename)
+        fullpath = Path(str(Path().resolve()) + "/" + file)
 
         if fullpath.suffix == ".zip":
             with zipfile.ZipFile(fullpath) as zp:
