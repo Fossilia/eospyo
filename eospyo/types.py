@@ -632,20 +632,19 @@ class Wasm(EosioType):
 
     def __bytes__(self):
         hexcode = bin_to_hex(self.value)
-        uint8_array = hex_to_uint8_array(hexcode)
+        uint8_array = _hex_to_uint8_array(hexcode)
         return bytes(uint8_array)
 
     @classmethod
     def from_bytes(cls, bytes_):
         uint8_array = Array.from_bytes(bytes_=bytes_, type_=Uint8)
         uint8_list = uint8_array.values
-        hexcode = uint8_list_to_hex(uint8_list)
+        hexcode = _uint8_list_to_hex(uint8_list)
         value = _hex_to_bin(hexcode)
         return cls(value=value)
 
 
-def hex_to_uint8_array(hex_string: str) -> Array:
-
+def _hex_to_uint8_array(hex_string: str) -> Array:
     if len(hex_string) % 2:
         msg = "Odd number of hex digits in input file."
         raise ValueError(msg)
@@ -665,7 +664,7 @@ def hex_to_uint8_array(hex_string: str) -> Array:
     return uint8_array
 
 
-def uint8_list_to_hex(uint8_list: list) -> str:
+def _uint8_list_to_hex(uint8_list: list) -> str:
     hexcode = ""
     for int8 in uint8_list:
         hexcode += ("00" + str(format(int8.value, "x")))[-2:]
